@@ -1,3 +1,6 @@
+#somestaff
+channel_data.*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -138,7 +141,3 @@ dmypy.json
 Dockerfile
 .dockerignore
 hapuga-bot-image.tar
-
-
-#somestaff
-channel_data.json
