@@ -138,3 +138,7 @@ dmypy.json
 Dockerfile
 .dockerignore
 hapuga-bot-image.tar
+
+
+#somestaff
+channel_data.json

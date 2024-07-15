@@ -3,13 +3,20 @@ import json
 def load_channel_data():
     try:
         with open('channel_data.json', 'r', encoding='utf-8') as file:
-            return json.load(file)
+            data = json.load(file)
+            for channel_id, channel_info in data.items():
+                if 'admins' not in channel_info:
+                    channel_info['admins'] = set()
+                else:
+                    channel_info['admins'] = set(channel_info['admins'])
+            return data
     except FileNotFoundError:
         return {}
 
 def save_channel_data(channel_data):
+    data = {chan_id: {'admins': list(info['admins']), 'themes': info['themes']} for chan_id, info in channel_data.items()}
     with open('channel_data.json', 'w', encoding='utf-8') as file:
-        json.dump(channel_data, file, ensure_ascii=False, indent=4)
+        json.dump(data, file, ensure_ascii=False, indent=4)
 
 def load_default_themes():
     try:
@@ -38,14 +45,3 @@ def load_default_themes():
             "Раннее утро перед суетой",
             "Суета общественного транспорта"
         ]
-
-def load_admin_users():
-    try:
-        with open('admin_users.json', 'r', encoding='utf-8') as file:
-            return set(json.load(file))
-    except FileNotFoundError:
-        return set()
-
-def save_admin_users(admin_users):
-    with open('admin_users.json', 'w', encoding='utf-8') as file:
-        json.dump(list(admin_users), file, ensure_ascii=False, indent=4)

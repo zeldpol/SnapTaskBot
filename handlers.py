@@ -3,7 +3,7 @@ import random
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from admin import admin_users, handle_admin_command
+from admin import handle_admin_command
 from utils import load_channel_data, save_channel_data, load_default_themes
 
 logger = logging.getLogger(__name__)
@@ -15,6 +15,7 @@ def startbot(update: Update, context: CallbackContext):
     chat_id = str(update.channel_post.chat.id)
     if chat_id not in channel_data:
         channel_data[chat_id] = {
+            "admins": set(),
             "themes": default_themes.copy()
         }
         save_channel_data(channel_data)
@@ -36,8 +37,13 @@ def theme(update: Update, context: CallbackContext):
     if chat_id in channel_data and channel_data[chat_id]["themes"]:
         theme = random.choice(channel_data[chat_id]["themes"])
         context.bot.send_message(chat_id=chat_id, text=f"Тема дня: {theme}")
-        channel_data[chat_id]["themes"].remove(theme)
-        save_channel_data(channel_data)
+        logger.info(f"Удаление темы: {theme} из канала {chat_id}")
+        if theme in channel_data[chat_id]["themes"]:
+            channel_data[chat_id]["themes"].remove(theme)
+            save_channel_data(channel_data)
+            logger.info(f"Тема '{theme}' успешно удалена.")
+        else:
+            logger.warning(f"Тема '{theme}' не найдена в списке тем канала {chat_id}.")
     else:
         context.bot.send_message(chat_id=chat_id, text="Нет доступных тем или бот не активирован.")
 
