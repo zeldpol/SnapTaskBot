@@ -17,13 +17,13 @@ def handle_admin_command(user_id, text, context: CallbackContext):
     command, *args = text.split(maxsplit=1)
     args = args[0].split() if args else []
     command_func = {
-        "authorize": authorize_admin,
-        "addtheme": add_theme,
-        "startvote": start_vote,
-        "endvote": end_vote,
-        "showtheme": show_theme,
-        "newtheme": new_theme,
-        "themes": list_themes,
+        "/authorize": authorize_admin,
+        "/addtheme": add_theme,
+        "/startvote": start_vote,
+        "/endvote": end_vote,
+        "/showtheme": show_theme,
+        "/newtheme": new_theme,
+        "/themes": list_themes,
     }.get(command.lower())
 
     if command_func:
