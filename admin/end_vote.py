@@ -23,6 +23,10 @@ def end_vote(user_id, args, context: CallbackContext):
             poll_results = {option['text']: option['voter_count'] for option in poll['options']}
             most_voted_option = max(poll_results, key=poll_results.get)
 
+            # Удаление выбранной темы из списка доступных тем
+            if most_voted_option in channel_data[channel_id]["themes"]:
+                channel_data[channel_id]["themes"].remove(most_voted_option)
+
             channel_data[channel_id]["current_theme"] = most_voted_option
             del channel_data[channel_id]["active_poll"]
             save_channel_data(channel_data)
