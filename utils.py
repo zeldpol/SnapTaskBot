@@ -1,47 +1,36 @@
 import json
+import logging
+
+logger = logging.getLogger(__name__)
+
+def load_json_file(file_path, default_value=None):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = file.read().strip()
+            if not data:  # Check if the file is empty
+                logger.warning(f"File {file_path} is empty. Returning default value.")
+                return default_value
+            return json.loads(data)
+    except FileNotFoundError:
+        logger.warning(f"File {file_path} not found. Returning default value.")
+        return default_value
+    except json.JSONDecodeError:
+        logger.error(f"Error decoding JSON from file {file_path}. Returning default value.")
+        return default_value
 
 def load_channel_data():
-    try:
-        with open('channel_data.json', 'r', encoding='utf-8') as file:
-            data = json.load(file)
-            for channel_id, channel_info in data.items():
-                if 'admins' not in channel_info:
-                    channel_info['admins'] = set()
-                else:
-                    channel_info['admins'] = set(channel_info['admins'])
-            return data
-    except FileNotFoundError:
-        return {}
+    data = load_json_file('channel_data.json', default_value={})
+    for channel_id, channel_info in data.items():
+        if 'admins' not in channel_info:
+            channel_info['admins'] = set()
+        else:
+            channel_info['admins'] = set(channel_info['admins'])
+    return data
 
 def save_channel_data(channel_data):
-    data = {chan_id: {'admins': list(info['admins']), 'themes': info['themes']} for chan_id, info in channel_data.items()}
+    data = {chan_id: {'admins': list(info['admins']), 'themes': info['themes'], 'current_theme': info.get('current_theme'), 'voting_options': info.get('voting_options', []), 'voting_results': info.get('voting_results', {})} for chan_id, info in channel_data.items()}
     with open('channel_data.json', 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
-def load_default_themes():
-    try:
-        with open('themes.json', 'r', encoding='utf-8') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return [
-            "Силуэты в городском закате",
-            "Спешащие люди",
-            "Старинные двери и окна",
-            "Уличные музыканты",
-            "Дождь на городских улицах",
-            "Отражения в лужах",
-            "Кафе на тротуаре",
-            "Цветы в городском асфальте",
-            "Архитектурные линии и углы",
-            "Жизнь в парке",
-            "Скрытые уголки города",
-            "Уличное искусство и граффити",
-            "Портреты собак на прогулке",
-            "Велосипеды в городе",
-            "Люди и их мобильные телефоны",
-            "Заброшенные здания",
-            "Модные аксессуары прохожих",
-            "Ночные огни и неон",
-            "Раннее утро перед суетой",
-            "Суета общественного транспорта"
-        ]
+def load_themes():
+    return load_json_file('themes.json', default_value=[])
