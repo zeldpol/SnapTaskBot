@@ -2,6 +2,7 @@ import random
 from telegram.ext import CallbackContext
 from admin.utils import get_admin_channel, save_channel_data, channel_data
 
+
 def new_theme(user_id, args, context: CallbackContext):
     if len(args) != 0:
         context.bot.send_message(chat_id=user_id, text="Используйте: newtheme")
