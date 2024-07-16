@@ -37,7 +37,7 @@ Follow the instructions below to install and set up SnapTaskBot on your device.
 
    ```plaintext
    TELEGRAM_TOKEN=your-telegram-bot-token
-   SECRET_PHRASE=thereisnospoon
+   SECRET_PHRASE=your-sercret-phrase
    ```
 
 5. Create a `data` folder in the project root and create a `channel_data.json` file:
