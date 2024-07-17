@@ -2,10 +2,10 @@ from telegram.ext import CallbackContext
 from admin.utils import get_admin_channel, save_channel_data, channel_data
 
 def add_theme(user_id, args, context: CallbackContext):
-    if len(args) != 1:
+    if len(args) < 1:
         context.bot.send_message(chat_id=user_id, text="Используйте: addtheme <тема>")
         return
-    new_theme = args[0]
+    new_theme = ' '.join(args)  # Объединяем аргументы в одну строку
     channel_id = get_admin_channel(user_id)
     if channel_id:
         channel_data[channel_id]["themes"].append(new_theme)
