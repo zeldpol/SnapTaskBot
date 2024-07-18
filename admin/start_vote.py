@@ -36,3 +36,4 @@ def start_vote(user_id, args, context: CallbackContext):
         save_channel_data(channel_data)
     else:
         context.bot.send_message(chat_id=user_id, text="Вы не авторизованы ни в одном канале.")
+        
