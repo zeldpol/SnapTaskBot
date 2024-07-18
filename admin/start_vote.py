@@ -17,7 +17,7 @@ def start_vote(user_id, args, context: CallbackContext):
         if len(themes) < 2:
             context.bot.send_message(chat_id=user_id, text=f"Недостаточно тем для голосования в канале {channel_id}.")
             return
-        elif len(themes) > 2 and len(themes) < min_themes:
+        elif len(themes) >= 2 and len(themes) < min_themes:
             options = random.sample(themes, len(themes))
         else:
             options = random.sample(themes, min_themes)
